@@ -73,7 +73,7 @@ psql -U mmuser -W -h 127.0.0.1 -f mm_postgres_backup.bak mattermost_test
 5. Clone your forked source: `git clone https://github.com/YOUR_GITHUB_USERNAME/mattermost-server.git`
 
 ### Starting and testing your server
-1. To start your server:
+1. To start your server, go to the location of your source code then:
     - `cd mattermost-server`
     - `make run-server`
 2. To test your server, run the following in your terminal
