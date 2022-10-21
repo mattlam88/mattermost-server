@@ -22,7 +22,8 @@ Table of contents
 =================
 
   * [Try out Mattermost](#try-out-mattermost)
-  * [Install Mattermost](#install-mattermost)
+  * [Install Mattermost Server](#install-mattermost-application)
+  * [Install Mattermost](#install-mattermost-application)
   * [Native Mobile and Desktop Apps](#native-mobile-and-desktop-apps)
   * [Get Security Bulletins](#get-security-bulletins)
   * [Get Involved](#get-involved)
@@ -30,12 +31,64 @@ Table of contents
   * [Get the Latest News](#get-the-latest-news)
   * [Contributing](#contributing)
 
-## Install Mattermost
+## Install Mattermost Server (Go)
+### Dependencies
+1. [Docker v17.12.0+](https://docs.docker.com/desktop/install/mac-install/)
+2. [Docker Compose v1.21.0+](https://docs.docker.com/compose/)
+3. [Go v1.18.0+](https://go.dev/dl/)
+    - If you are on a Mac and have brew installed you can use the following command to install Go: `brew install go`
+
+### Configuring Docker
+1. Backup any existing containers:
+
+```
+mysqldump -h 127.0.0.1 --column-statistics=0 -u mmuser -p mattermost_test > mm_mysql_backup.sql
+pg_dump -U mmuser -W -d mattermost_test -h 127.0.0.1 > mm_postgres_backup.bak
+```
+
+2. Upgrade and starting new docker-compose managed containers:
+
+```
+mysql -u mmuser -p -h 127.0.0.1 mattermost_test < mm_mysql_backup.sql
+psql -U mmuser -W -h 127.0.0.1 -f mm_postgres_backup.bak mattermost_test
+```
+
+### Update Shell's Initialization Script
+1. Find .basrc or .zshrc
+    - You can check by doing `cd ~/` in the terminal
+    - Then check if either file exists using `ls -a`
+2. Update either file with `ulimit -n 8096`
+
+### Fork and Clone the mattermost-server code
+1. Go to https://github.com/mattermost/mattermost-server
+2. Click on fork on the top right of the screen:
+
+![image](https://user-images.githubusercontent.com/63694045/197295365-cfa46d28-93f2-4144-9674-e32bc52fca1b.png)
+
+3. Create a fork for your account
+
+![image](https://user-images.githubusercontent.com/63694045/197295959-c8f40663-301c-49be-af9e-664d2370c821.png)
+
+4. In your terminal and find a place to clone your code
+5. Clone your forked source: `git clone https://github.com/YOUR_GITHUB_USERNAME/mattermost-server.git`
+
+### Starting and testing your server
+1. To start your server:
+    - `cd mattermost-server`
+    - `make run-server`
+2. To test your server, run the following in your terminal
+    - `curl http://localhost:8065/api/v4/system/ping`
+    - `make stop-server`
+3. If successful, you will receive a JSON object from the curl command
+4. To stop the server completely: `make stop-docker`
+
+### Additional information/guides
+[Link to Mattermost's online server guide](https://developers.mattermost.com/contribute/server/developer-setup) - Follow this guide if you want to write code for Mattermost.
+
+## Install Mattermost Application
 
 - [Download and Install Mattermost Self-Hosted](https://docs.mattermost.com/guides/deployment.html) - Deploy a Mattermost Self-hosted instance in minutes via Docker, Ubuntu, or tar.
 - [Get started with Mattermost Cloud](https://customers.mattermost.com/cloud/signup) to use Mattermost instantly.
-- [Developer machine setup](https://developers.mattermost.com/contribute/server/developer-setup) - Follow this guide if you want to write code for Mattermost.
-
 
 Other install guides:
 
